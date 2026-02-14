@@ -12,9 +12,17 @@ RUN DC=ldc2 dub build -c "static" --build-mode allAtOnce -b release --compiler=l
 
 # Base for run
 FROM debian:stable-slim
-RUN apt-get update && apt-get install --no-install-recommends -y ca-certificates curl \
+# --- FIX STARTS HERE ---
+# I added 'libplist-dev' and 'libssl-dev' to this list.
+# This fixes the "LibraryLoadingException" crash.
+RUN apt-get update && apt-get install --no-install-recommends -y \
+    ca-certificates \
+    curl \
+    libplist-dev \
+    libssl-dev \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
+# --- FIX ENDS HERE ---
 
 # Copy build artefacts to run
 WORKDIR /opt/
